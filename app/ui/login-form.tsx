@@ -10,9 +10,12 @@ import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Button } from './button';
 import { useFormState, useFormStatus } from 'react-dom';
 import { authenticate } from '../lib/actions';
+import { useSearchParams } from 'next/navigation';
 
 export default function LoginForm() {
   const [errorMessage, dispatch] = useFormState(authenticate, undefined);
+  const searchParams = useSearchParams();
+  const testingParam = searchParams.get('testing');
 
   return (
     <form className="space-y-3" action={dispatch}>
@@ -35,7 +38,9 @@ export default function LoginForm() {
                 type="email"
                 name="email"
                 placeholder="Enter your email address"
-                value="user@nextmail.com"
+                defaultValue={
+                  testingParam === 'true' ? 'user@nextmail.com' : ''
+                }
                 required
               />
               <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
@@ -55,7 +60,7 @@ export default function LoginForm() {
                 type="password"
                 name="password"
                 placeholder="Enter password"
-                value={'123456'}
+                defaultValue={testingParam === 'true' ? '123456' : ''}
                 required
                 minLength={6}
               />

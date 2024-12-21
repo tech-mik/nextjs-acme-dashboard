@@ -1,7 +1,39 @@
+'use client';
 import AcmeLogo from '@/app/ui/acme-logo';
 import LoginForm from '@/app/ui/login-form';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useRef } from 'react';
+import { toast } from 'sonner';
 
+interface SearchParams extends URLSearchParams {
+  testing: string;
+}
 export default function LoginPage() {
+  const searchParams = useSearchParams();
+  const testingParam = searchParams.get('testing');
+
+  const mountedRef = useRef<boolean | null>(null);
+
+  useEffect(() => {
+    if (!testingParam) return;
+    let timerId: number | string;
+
+    if (!mountedRef.current && testingParam === 'true') {
+      setTimeout(() => {
+        toast.success('Welcome tester!', {
+          description:
+            'For testing purposes, the login details are already provided. Enjoy!',
+        });
+      });
+    }
+
+    mountedRef.current = true;
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [testingParam]);
+
   return (
     <main className="flex items-center justify-center md:h-screen">
       <div className="relative mx-auto flex w-full max-w-[400px] flex-col space-y-2.5 p-4 md:-mt-32">
